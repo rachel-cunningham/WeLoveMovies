@@ -15,7 +15,6 @@ function mapCriticToReview(rows) {
         updated_at: element.reviews_updated_at,
         critic_id: element.critic_id,
         movie_id: element.movie_id,
-        critics: [],
       };
       resultArr.push(reviewObj);
     }
@@ -24,14 +23,14 @@ function mapCriticToReview(rows) {
     const index = resultArr.findIndex(
       (review) => review.review_id === element.review_id
     );
-    resultArr[index].critics.push({
+    resultArr[index]["critic"] = {
       critic_id: element.critic_id,
       preferred_name: element.preferred_name,
       surname: element.surname,
       organization_name: element.organization_name,
       created_at: element.critic_created_at,
       updated_at: element.critic_updated_at,
-    });
+    };
   });
   return resultArr;
 }
@@ -42,8 +41,8 @@ function list() {
 
 function listIfShowing() {
   return knex("movies as m")
-    .join("reviews as r", "m.movie_id", "r.movie_id")
-    .join("movies_theaters as mt", "r.movie_id", "mt.movie_id")
+    .distinct()
+    .join("movies_theaters as mt", "m.movie_id", "mt.movie_id")
     .select(
       "m.movie_id",
       "m.title",

@@ -5,10 +5,10 @@ async function list(req, res, next) {
   const query = req.query.is_showing;
   if (!query) {
     const data = await service.list();
-    return res.json(data);
+    return res.json({ data: data });
   } else {
     const selectedData = await service.listIfShowing();
-    return res.json(selectedData);
+    return res.json({ data: selectedData });
   }
 }
 
@@ -30,13 +30,13 @@ async function read(req, res) {
 async function matchMovieToTheaters(req, res, next) {
   const { movieId } = req.params;
   const response = await service.listTheatersShowingMovie(movieId);
-  return res.json(response);
+  return res.json({ data: response });
 }
 
 async function matchMovietoReview(req, res, next) {
   const { movieId } = req.params;
   const response = await service.listReviewsForMovie(movieId);
-  return res.json(response);
+  return res.json({ data: response });
 }
 
 module.exports = {

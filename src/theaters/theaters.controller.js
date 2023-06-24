@@ -8,7 +8,7 @@ async function read(req, res) {
 
 async function list(req, res, next) {
   const response = await service.matchTheaterToMoive();
-  return res.json(response);
+  return res.json({ data: response });
 }
 module.exports = {
   read,

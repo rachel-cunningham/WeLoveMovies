@@ -5,7 +5,7 @@ async function reviewExists(req, res, next) {
   const review_id = req.params.reviewId;
   const review = await service.read(review_id);
 
-  if (review) {
+  if (review.length > 0) {
     res.locals.review = review;
     return next();
   }
@@ -13,8 +13,8 @@ async function reviewExists(req, res, next) {
 }
 
 async function destory(req, res) {
-  const { review } = res.locals;
-  await service.delete(review.review_id);
+  const review = res.locals.review[0];
+  const resp = await service.delete(review.review_id);
   res.sendStatus(204);
 }
 

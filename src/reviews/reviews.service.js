@@ -1,14 +1,5 @@
 const knex = require("../db/connection");
 
-function addCriticInfo(rows) {
-  const result = rows.map(async (element) => {
-    const criticData = await readCritic(element.critic_id);
-    const copy = { ...element, critic: criticData };
-    return copy;
-  });
-  return result[0];
-}
-
 function read(review_id) {
   return knex("reviews").select("*").where({ review_id });
 }
@@ -23,13 +14,18 @@ function destory(review_id) {
 
 function update(updateReview) {
   return knex("reviews as r ")
+    .select("*")
     .where({ review_id: updateReview.review_id })
-    .update(updateReview, ["*"])
-    .then(addCriticInfo);
+    .update(updateReview, "*")
+    .then(async (data) => {
+      const criticData = await readCritic(updateReview.critic_id);
+      const copy = { ...updateReview, critic: criticData };
+      return copy;
+    });
 }
 
 module.exports = {
-  read,
+  read: read,
   readCritic,
   delete: destory,
   update,
